@@ -1,0 +1,27 @@
+{
+  "name": "mamba-widget",
+  "version": "1.0.0",
+  "description": "Cute daily focus with plant vibes",
+  "author": "Mamba Team",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build --win --config.win.target=zip",
+    "package": "electron-packager . MambaWidget --platform=win32 --arch=x64 --icon=mamba.png --overwrite --out=dist"
+  },
+  "dependencies": {
+    "auto-launch": "^5.0.6"
+  },
+  "devDependencies": {
+    "electron": "^42.1.0",
+    "electron-builder": "^26.8.1",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.mamba.widget",
+    "productName": "MambaWidget",
+    "win": {
+      "target": "zip"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mamba</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="widget" class="draggable">
+
+    <!-- HEADER -->
+    <div id="header">
+      <div id="brand">
+        <img src="mamba.png" id="logo" />
+        <div>
+          <div id="title">Mamba</div>
+          <div id="subtitle">Cute daily focus with plant vibes</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button id="modeToggle" class="chip">Preview</button>
+        <button id="hideWidget" class="chip" style="background: var(--mamba-leaf); color: white; border: none;">✕</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div id="tabs">
+      <button class="tab active" data-page="tasks">Tasks</button>
+      <button class="tab" data-page="notes">Notes</button>
+      <button class="tab" data-page="timers">Timers</button>
+    </div>
+
+    <!-- TASKS PAGE -->
+    <div id="page-tasks" class="page active">
+
+      <div id="task-input" class="edit-mode">
+        <input type="text" id="taskText" placeholder="What are you working on?" />
+        <div class="input-row">
+          <input type="time" id="taskTime" />
+          <select id="taskCategory">
+            <option value="Study">Study</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+          </select>
+          <button id="addTask" class="primary-btn">+</button>
+        </div>
+      </div>
+
+      <div id="meta-row">
+        <div id="progress">
+          <div id="progress-bar"></div>
+        </div>
+        <span id="progress-text">0% complete</span>
+      </div>
+
+      <div id="task-list"></div>
+    </div>
+
+    <!-- NOTES PAGE -->
+    <div id="page-notes" class="page">
+      <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
+    </div>
+
+    <!-- TIMERS PAGE -->
+    <div id="page-timers" class="page">
+      <div id="pomodoro">
+        <div id="timerDisplay">25:00</div>
+        <div id="timer-controls">
+          <button id="startPomodoro" class="primary-btn">Start</button>
+          <button id="resetPomodoro" class="chip">Reset</button>
+        </div>
+        <button id="testAlert" class="chip" style="margin-top: 10px; opacity: 0.6;">Test Sound & Notify</button>
+      </div>
+    </div>
+
+  </div>
+
+  <audio id="alertSound" src="alert.mp3" preload="auto"></audio>
+  <script src="script.js"></script>
+</body>
+</html>
