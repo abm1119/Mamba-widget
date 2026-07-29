@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">Mamba Widget Architecture</title>
+  <desc id="arch-desc">Data flow diagram showing the relationship between renderer, preload, main process, and encrypted storage in Mamba Widget.</desc>
+
+  <defs>
+    <linearGradient id="archBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a2e1f"/>
+      <stop offset="100%" stop-color="#0d1a11"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4A7B4F"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="280" rx="20" fill="url(#archBg)"/>
+
+  <!-- Title -->
+  <text x="600" y="36" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="700" fill="#a8c5aa" text-anchor="middle">Architecture</text>
+
+  <!-- Renderer layer -->
+  <g transform="translate(100, 70)">
+    <rect x="0" y="0" width="200" height="140" rx="16" fill="#2D4A30" opacity="0.4" stroke="#4A7B4F" stroke-width="1" stroke-opacity="0.3"/>
+    <text x="100" y="28" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="600" fill="#7CB87F" text-anchor="middle">RENDERER</text>
+    <line x1="20" y1="40" x2="180" y2="40" stroke="#4A7B4F" stroke-width="1" stroke-opacity="0.2"/>
+
+    <text x="20" y="64" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">index.html</text>
+    <text x="20" y="88" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">script.js</text>
+    <text x="20" y="112" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">style.css</text>
+  </g>
+
+  <!-- Preload -->
+  <g transform="translate(380, 70)">
+    <rect x="0" y="0" width="200" height="140" rx="16" fill="#2D4A30" opacity="0.5" stroke="#7CB87F" stroke-width="1" stroke-opacity="0.4"/>
+    <text x="100" y="28" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="600" fill="#7CB87F" text-anchor="middle">PRELOAD</text>
+    <line x1="20" y1="40" x2="180" y2="40" stroke="#4A7B4F" stroke-width="1" stroke-opacity="0.2"/>
+
+    <text x="20" y="64" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">preload.js</text>
+    <text x="20" y="88" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">contextBridge</text>
+    <text x="20" y="112" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">mambaAPI</text>
+  </g>
+
+  <!-- Main process -->
+  <g transform="translate(660, 70)">
+    <rect x="0" y="0" width="200" height="140" rx="16" fill="#2D4A30" opacity="0.6" stroke="#7CB87F" stroke-width="1.5" stroke-opacity="0.5"/>
+    <text x="100" y="28" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="600" fill="#7CB87F" text-anchor="middle">MAIN</text>
+    <line x1="20" y1="40" x2="180" y2="40" stroke="#4A7B4F" stroke-width="1" stroke-opacity="0.2"/>
+
+    <text x="20" y="64" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">main.js</text>
+    <text x="20" y="88" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">IPC handlers</text>
+    <text x="20" y="112" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">Tray / Shortcuts</text>
+  </g>
+
+  <!-- Storage -->
+  <g transform="translate(940, 70)">
+    <rect x="0" y="0" width="200" height="140" rx="16" fill="#2D4A30" opacity="0.4" stroke="#4A7B4F" stroke-width="1" stroke-opacity="0.3"/>
+    <text x="100" y="28" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="600" fill="#7CB87F" text-anchor="middle">STORAGE</text>
+    <line x1="20" y1="40" x2="180" y2="40" stroke="#4A7B4F" stroke-width="1" stroke-opacity="0.2"/>
+
+    <text x="20" y="64" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">keytar (OS keychain)</text>
+    <text x="20" y="88" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">CryptoJS (AES)</text>
+    <text x="20" y="112" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#d4e8d5">localStorage</text>
+  </g>
+
+  <!-- Arrows -->
+  <line x1="300" y1="140" x2="380" y2="140" stroke="#4A7B4F" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="580" y1="140" x2="660" y2="140" stroke="#4A7B4F" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="860" y1="140" x2="940" y2="140" stroke="#4A7B4F" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Arrow labels -->
+  <text x="340" y="130" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" fill="#5a8a6a" text-anchor="middle">IPC</text>
+  <text x="620" y="130" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" fill="#5a8a6a" text-anchor="middle">IPC</text>
+  <text x="900" y="130" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" fill="#5a8a6a" text-anchor="middle">read/write</text>
+</svg>

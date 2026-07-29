@@ -1,0 +1,10 @@
+<svg width="800" height="100" viewBox="0 0 800 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Section Title Background -->
+  <rect x="0" y="0" width="800" height="100" rx="16" fill="rgba(74, 123, 79, 0.05)" />
+  
+  <!-- Section Indicator (Leaf) -->
+  <path d="M40,50 C30,30 50,20 60,30 C70,40 50,70 40,50 Z" fill="#4A7B4F" />
+  
+  <!-- Section Title -->
+  <text x="80" y="60" font-family="Inter, sans-serif" font-size="32" font-weight="700" fill="#2F4D2F">Getting Started</text>
+</svg>
