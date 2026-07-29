@@ -10,12 +10,23 @@
     "package": "electron-packager . MambaWidget --platform=win32 --arch=x64 --icon=mamba.png --overwrite --out=dist"
   },
   "dependencies": {
-    "auto-launch": "^5.0.6"
+    "auto-launch": "^5.0.6",
+    "crypto-js": "^4.2.0",
+    "keytar": "^7.9.0"
   },
   "devDependencies": {
     "electron": "^42.1.0",
-    "electron-builder": "^26.8.1",
-    "electron-packager": "^17.1.2"
+    "electron-builder": "26.15.3",
+    "electron-packager": "17.1.2"
+  },
+  "overrides": {
+    "minimatch": "10.2.6",
+    "brace-expansion": "5.0.8",
+    "tar": "7.5.22",
+    "builder-util-runtime": "9.7.0",
+    "glob": "10.5.0",
+    "rimraf": "5.0.10",
+    "ejs": "4.0.1"
   },
   "build": {
     "appId": "com.mamba.widget",

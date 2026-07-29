@@ -1,8 +1,26 @@
 /* ---------------------------------------------------------
-   MAMBA WIDGET — PRODUCTION SCRIPT
+   MAMBA WIDGET — PRODUCTION SCRIPT (SECURE)
 --------------------------------------------------------- */
 
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+// Utility for basic sanitization
+const sanitize = (str) => {
+  if (typeof str !== 'string') return '';
+  const temp = document.createElement('div');
+  temp.textContent = str;
+  return temp.innerHTML;
+};
+
+// Safe Task Data Loading/Validation
+let tasks = [];
+async function loadAndRender() {
+  if (window.mambaAPI) {
+    const loaded = await window.mambaAPI.loadTasks();
+    if (Array.isArray(loaded)) {
+      tasks = loaded;
+    }
+  }
+  renderTasks();
+}
 
 const taskList = document.getElementById("task-list");
 const addBtn = document.getElementById("addTask");
@@ -35,25 +53,42 @@ document.querySelectorAll(".tab").forEach(tab => {
 
 /* TASKS */
 function renderTasks() {
-  taskList.innerHTML = "";
+  taskList.textContent = "";
 
   tasks.forEach((task, index) => {
     const row = document.createElement("div");
     row.className = `task ${task.done ? "done" : ""}`;
-    row.dataset.category = task.category;
+    row.dataset.category = task.category || "General";
 
-    row.innerHTML = `
-      <input type="checkbox" ${task.done ? "checked" : ""} onchange="toggleDone(${index})">
-      <span contenteditable="true" onblur="updateTask(${index}, this.innerText)">${task.text}</span>
-      <input type="time" value="${task.time || ""}" onchange="updateTime(${index}, this.value)" />
-      <button onclick="deleteTask(${index})">✕</button>
-    `;
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = !!task.done;
+    checkbox.addEventListener("change", () => toggleDone(index));
+
+    const span = document.createElement("span");
+    span.contentEditable = "true";
+    span.textContent = task.text || "";
+    span.addEventListener("blur", (e) => updateTask(index, e.target.textContent));
+
+    const timeInput = document.createElement("input");
+    timeInput.type = "time";
+    timeInput.value = task.time || "";
+    timeInput.addEventListener("change", (e) => updateTime(index, e.target.value));
+
+    const delBtn = document.createElement("button");
+    delBtn.innerText = "✕";
+    delBtn.addEventListener("click", () => deleteTask(index));
+
+    row.appendChild(checkbox);
+    row.appendChild(span);
+    row.appendChild(timeInput);
+    row.appendChild(delBtn);
 
     taskList.appendChild(row);
   });
 
   updateProgress();
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  if (window.mambaAPI) window.mambaAPI.saveTasks(tasks);
 }
 
 function addTask() {
@@ -75,20 +110,21 @@ function addTask() {
   textInput.focus();
 }
 
-// Handle Enter key for task input
 document.getElementById("taskText").addEventListener("keypress", (e) => {
   if (e.key === "Enter") addTask();
 });
 
 function updateTask(index, newText) {
+  if (!tasks[index]) return;
   tasks[index].text = newText.trim();
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  if (window.mambaAPI) window.mambaAPI.saveTasks(tasks);
   updateProgress();
 }
 
 function updateTime(index, newTime) {
+  if (!tasks[index]) return;
   tasks[index].time = newTime;
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  if (window.mambaAPI) window.mambaAPI.saveTasks(tasks);
 }
 
 function deleteTask(index) {
@@ -97,23 +133,21 @@ function deleteTask(index) {
 }
 
 function toggleDone(index) {
+  if (!tasks[index]) return;
   tasks[index].done = !tasks[index].done;
   renderTasks();
 }
-
-window.addTask = addTask;
-window.updateTask = updateTask;
-window.updateTime = updateTime;
-window.deleteTask = deleteTask;
-window.toggleDone = toggleDone;
 
 /* PROGRESS */
 function updateProgress() {
   const done = tasks.filter(t => t.done).length;
   const percent = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
 
-  document.getElementById("progress-bar").style.width = percent + "%";
-  document.getElementById("progress-text").innerText = `${percent}% complete`;
+  const progressBar = document.getElementById("progress-bar");
+  if (progressBar) progressBar.style.width = percent + "%";
+  
+  const progressText = document.getElementById("progress-text");
+  if (progressText) progressText.innerText = `${percent}% complete`;
 }
 
 /* REMINDERS */
@@ -124,18 +158,19 @@ function checkReminders() {
   tasks.forEach(task => {
     if (task.time === current && !task.done && task.time) {
       if (window.mambaAPI) {
-        window.mambaAPI.notify("Mamba Reminder", task.text);
+        // Sanitize before sending to Main
+        window.mambaAPI.notify("Mamba Reminder", sanitize(task.text));
       }
 
       alertSound.currentTime = 0;
-      alertSound.play().catch(e => console.log("Sound play failed:", e));
-      
-      // Mark as reminded so it doesn't fire every second if we checked more often
+      alertSound.play().catch(e => console.error("Sound play failed:", e));
     }
   });
 }
 
 /* NOTES */
+// Note: Notes are still in localStorage as they were not specifically requested to be encrypted, 
+// but the same pattern could be applied if needed.
 notesArea.value = localStorage.getItem("mambaNotes") || "";
 notesArea.addEventListener("input", () => {
   localStorage.setItem("mambaNotes", notesArea.value);
@@ -152,7 +187,7 @@ function updateTimer() {
     `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-document.getElementById("startPomodoro").onclick = () => {
+document.getElementById("startPomodoro").addEventListener("click", () => {
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;
@@ -178,38 +213,38 @@ document.getElementById("startPomodoro").onclick = () => {
       }
 
       alertSound.currentTime = 0;
-      alertSound.play().catch(e => console.log("Sound play failed:", e));
+      alertSound.play().catch(e => console.error("Sound play failed:", e));
 
       timeLeft = 25 * 60;
       updateTimer();
     }
   }, 1000);
-};
+});
 
-document.getElementById("resetPomodoro").onclick = () => {
+document.getElementById("resetPomodoro").addEventListener("click", () => {
   clearInterval(timerInterval);
   timerInterval = null;
   document.getElementById("startPomodoro").innerText = "Start";
   document.body.classList.remove("timer-running");
   timeLeft = 25 * 60;
   updateTimer();
-};
+});
 
 updateTimer();
 
 /* TEST ALERT */
-document.getElementById("testAlert").onclick = () => {
+document.getElementById("testAlert").addEventListener("click", () => {
   if (window.mambaAPI) {
     window.mambaAPI.notify("Mamba Test", "Your alerts are working perfectly! 🌿");
   }
   alertSound.currentTime = 0;
   alertSound.play().catch(e => {
-    console.log("Sound play failed:", e);
+    console.error("Sound play failed:", e);
     alert("Audio playback failed. Please click anywhere on the widget first to enable audio!");
   });
-};
+});
 
 /* INIT */
 addBtn.addEventListener("click", addTask);
 setInterval(checkReminders, 60000);
-renderTasks();
+loadAndRender();

@@ -1,5 +1,9 @@
 # 🌿 Mamba Widget
 
+<p align="center">
+  <img src="mamba.png" alt="Mamba Logo" width="120" height="120">
+</p>
+
 **"A cute, glassmorphic daily focus widget that brings plant vibes and productivity to your desktop."**
 
 ---

@@ -10,10 +10,25 @@ const {
   Notification
 } = require("electron");
 const path = require("path");
+const fs = require("fs");
+const keytar = require("keytar");
+const CryptoJS = require("crypto-js");
 
-let win;
-let launcherWin;
-let tray;
+const SERVICE = "MambaWidget";
+const ACCOUNT = "StorageKey";
+const STORAGE_FILE = path.join(app.getPath("userData"), "tasks.enc");
+
+// ---------------------------------------------------------
+// ENCRYPTION HELPERS
+// ---------------------------------------------------------
+async function getEncryptionKey() {
+  let key = await keytar.getPassword(SERVICE, ACCOUNT);
+  if (!key) {
+    key = require("crypto").randomBytes(32).toString("hex");
+    await keytar.setPassword(SERVICE, ACCOUNT, key);
+  }
+  return key;
+}
 
 // ---------------------------------------------------------
 // AUTO-LAUNCH
@@ -95,11 +110,35 @@ ipcMain.on("toggle-widget", () => {
 });
 
 ipcMain.on("show-notification", (event, { title, body }) => {
+  // Strict validation of IPC payload
+  const safeTitle = typeof title === 'string' ? title.substring(0, 100) : 'Notification';
+  const safeBody = typeof body === 'string' ? body.substring(0, 500) : '';
+
   new Notification({ 
-    title, 
-    body,
+    title: safeTitle, 
+    body: safeBody,
     icon: path.join(__dirname, "mamba.png")
   }).show();
+});
+
+ipcMain.on("save-tasks", async (event, tasks) => {
+  const key = await getEncryptionKey();
+  const encrypted = CryptoJS.AES.encrypt(JSON.stringify(tasks), key).toString();
+  fs.writeFileSync(STORAGE_FILE, encrypted);
+});
+
+ipcMain.handle("load-tasks", async () => {
+  if (!fs.existsSync(STORAGE_FILE)) return [];
+  
+  const key = await getEncryptionKey();
+  const encrypted = fs.readFileSync(STORAGE_FILE, "utf-8");
+  try {
+    const bytes = CryptoJS.AES.decrypt(encrypted, key);
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  } catch (e) {
+    console.error("Failed to decrypt tasks:", e);
+    return [];
+  }
 });
 
 // ---------------------------------------------------------
