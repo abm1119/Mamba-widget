@@ -26,8 +26,7 @@
     "builder-util-runtime": "9.7.0",
     "glob": "10.5.0",
     "rimraf": "5.0.10",
-    "ejs": "4.0.1",
-    "extract-zip": "npm:@electron-internal/extract-zip@^1.0.5"
+    "ejs": "4.0.1"
   },
   "build": {
     "appId": "com.mamba.widget",
