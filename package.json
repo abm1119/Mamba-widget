@@ -15,7 +15,7 @@
     "keytar": "^7.9.0"
   },
   "devDependencies": {
-    "electron": "^42.1.0",
+    "electron": "^42.10.0",
     "electron-builder": "26.15.3",
     "@electron/packager": "^20.3.0"
   },
