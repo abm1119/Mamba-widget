@@ -6,9 +6,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder build --win --config.win.target=zip",
-    "package": "electron-packager . MambaWidget --platform=win32 --arch=x64 --icon=mamba.png --overwrite --out=dist",
-    "postinstall": "node patch-sprintf.js"
+    "build": "npm run package",
+    "package": "electron-packager . MambaWidget --platform=win32 --arch=x64 --icon=mamba.png --overwrite --out=dist"
   },
   "dependencies": {
     "auto-launch": "^5.0.6",
@@ -17,9 +16,7 @@
   },
   "devDependencies": {
     "@electron/packager": "^20.3.0",
-    "electron": "^42.10.0",
-    "electron-builder": "^26.5.0",
-    "patch-package": "^8.0.1"
+    "electron": "^42.10.0"
   },
   "overrides": {
     "minimatch": "10.2.6",
@@ -30,7 +27,6 @@
     "rimraf": "5.0.10",
     "ejs": "4.0.1",
     "http-cache-semantics": "^4.3.0",
-    "sprintf-js": "^1.1.3",
     "undici": "^8.11.2"
   },
   "build": {
