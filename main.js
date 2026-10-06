@@ -59,7 +59,8 @@ function createWindow() {
     skipTaskbar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true
+      contextIsolation: true,
+      sandbox: true
     }
   });
 
@@ -91,7 +92,8 @@ function createLauncher() {
     skipTaskbar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true
+      contextIsolation: true,
+      sandbox: true
     }
   });
 
