@@ -27,7 +27,7 @@
     "rimraf": "5.0.10",
     "ejs": "4.0.1",
     "http-cache-semantics": "^4.3.0",
-    "undici": "^8.11.2"
+    "undici": "^8.12.3"
   },
   "build": {
     "appId": "com.mamba.widget",
